@@ -1,8 +1,9 @@
 # 📦 Sistema de Marcação de Armários
 
-[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)](https://github.com/SEU_USUARIO/SEU_REPOSITORIO) 
+[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)](https://github.com/SEU_USUARIO/SEU_REPOSITORIO)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![CSV](https://img.shields.io/badge/CSV-Suportado-blue)](https://github.com/SEU_USUARIO/SEU_REPOSITORIO)
+
 
 ## 🎯 Objetivo
 Este site tem como objetivo permitir a **marcação e gerenciamento de armários** para empresas, escolas ou outros ambientes. Ele permite controlar quais pessoas possuem armário e gerenciar as informações associadas a cada armário.
