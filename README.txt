@@ -32,4 +32,4 @@ Aqui você pode colocar uma imagem ou GIF mostrando o sistema funcionando:
 ![Exemplo](URL_DA_IMAGEM_OU_GIF)
 
 ## 📄 Licença
-Este projeto está licenciado sob a licença **MIT** - veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a licença **MIT** - veja o arquivo [LICENSE](LICENSE) para detalhes.      
