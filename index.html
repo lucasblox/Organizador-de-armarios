@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Controle de Armários</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- React via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel to transpile JSX in-browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      :root {
+        --bg: #0b0c10;
+        --panel: #12151b;
+        --muted: #a4b1cd;
+        --text: #e6eaf2;
+        --primary: #4f46e5;
+        --primary-2: #7c3aed;
+        --ok: #16a34a;
+        --warn: #f59e0b;
+        --danger: #ef4444;
+        --radius: 16px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; padding: 24px;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial;
+        background: radial-gradient(1200px 600px at 10% -10%, rgba(79,70,229,.25), transparent 60%),
+                    radial-gradient(1000px 500px at 120% 10%, rgba(124,58,237,.18), transparent 60%),
+                    var(--bg);
+        color: var(--text);
+      }
+      .container { max-width: 1100px; margin: 0 auto; }
+      h1 { font-size: 28px; margin: 0 0 12px; letter-spacing: .3px; }
+      .muted { color: var(--muted); }
+      .grid { display: grid; gap: 16px; }
+      @media (min-width: 900px){ .grid-2 { grid-template-columns: 2fr 3fr; } }
+      .card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      }
+      .card h2 { font-size: 18px; margin: 0 0 6px; }
+      .card .header { padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .card .content { padding: 16px 18px; }
+      label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--muted); }
+      input, select {
+        width: 100%; padding: 10px 12px;
+        border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.04); color: var(--text);
+        outline: none;
+      }
+      input::placeholder { color: #8391b2; }
+      .row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+      @media (min-width: 700px){ .row-2 { grid-template-columns: 1fr 1fr; } }
+      .actions { display:flex; gap:10px; flex-wrap: wrap; }
+      button {
+        border: none; cursor: pointer; padding: 10px 14px;
+        border-radius: 12px; font-weight: 600;
+        background: linear-gradient(120deg, var(--primary), var(--primary-2));
+        color: white; transition: transform .05s ease, opacity .2s ease, filter .2s ease;
+      }
+      button.secondary { background: rgba(255,255,255,0.06); color: var(--text); }
+      button.warn { background: var(--warn); }
+      button.danger { background: var(--danger); }
+      button:active { transform: translateY(1px); }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+      th { font-weight: 700; color: var(--muted); }
+      .pill { padding: 4px 8px; border-radius: 999px; font-size: 12px; }
+      .ok { background: rgba(22,163,74,.15); color: #34d399; border: 1px solid rgba(52,211,153,.35); }
+      .no { background: rgba(239,68,68,.12); color: #fca5a5; border: 1px solid rgba(239,68,68,.35); }
+      .toolbar {
+        display:flex; gap:10px; align-items:center; justify-content: space-between;
+        margin-bottom: 8px; flex-wrap: wrap;
+      }
+      .toolbar .left, .toolbar .right { display:flex; gap:10px; align-items:center; }
+      .search { min-width: 240px; }
+      .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
+      .stat { background: rgba(255,255,255,0.04); padding:10px 12px; border-radius:12px; text-align:center; }
+      .stat b { font-size: 18px; display:block; }
+      .small { font-size: 12px; color: var(--muted); }
+      .footer { margin-top: 18px; color: var(--muted); font-size: 12px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Controle de Armários e Chaves</h1>
+      <div class="muted">Cadastre funcionários, controle chaves e exporte relatórios em CSV.</div>
+
+      <div class="grid grid-2" style="margin-top:18px;">
+        <div class="card">
+          <div class="header"><h2>Novo cadastro</h2></div>
+          <div class="content">
+            <div class="row row-2">
+              <div>
+                <label for="nome">Nome do funcionário</label>
+                <input id="nome" placeholder="Ex.: Ana Silva" />
+              </div>
+              <div>
+                <label for="chave">Número da chave do armário</label>
+                <input id="chave" placeholder="Ex.: 102" />
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px;">
+              <div>
+                <label for="possui">Possui armário?</label>
+                <select id="possui">
+                  <option value="">Selecione</option>
+                  <option value="Sim">Sim</option>
+                  <option value="Não">Não</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions" style="margin-top:14px;">
+              <button id="btn-salvar">Salvar</button>
+              <button class="secondary" id="btn-limpar">Limpar</button>
+              <input type="file" id="csv-in" accept=".csv" style="display:none" />
+              <button class="secondary" id="btn-importar">Importar CSV</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="header"><h2>Registros</h2></div>
+          <div class="content">
+            <div class="toolbar">
+              <div class="left">
+                <input class="search" id="busca" placeholder="Pesquisar por nome ou chave..." />
+                <select id="filtro">
+                  <option value="todos">Todos</option>
+                  <option value="sim">Com armário</option>
+                  <option value="nao">Sem armário</option>
+                </select>
+              </div>
+              <div class="right">
+                <button class="secondary" id="btn-exportar">Exportar CSV</button>
+                <button class="warn" id="btn-zerar">Zerar tudo</button>
+              </div>
+            </div>
+
+            <div class="stats" id="stats"></div>
+
+            <div style="overflow:auto; max-height: 420px; margin-top:10px;">
+              <table id="tabela">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Chave</th>
+                    <th>Possui Armário</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">Dados salvos localmente no seu navegador.</div>
+    </div>
+
+    <script type="text/babel">
+      const el = id => document.getElementById(id);
+
+      const STORAGE_KEY = "armarios_registros_v1";
+
+      function getData(){
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch(e){ return []; }
+      }
+      function setData(data){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function exportCSV(rows){
+        const header = ["Nome do Funcionário","Número da Chave do Armário","Possui Armário (Sim/Não)"];
+        const csv = [header, ...rows.map(r => [r.nome, r.chave, r.possui])]
+          .map(line => line.map(x => `"${(x??'').toString().replaceAll('"','""')}"`).join(","))
+          .join("\n");
+        const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "formulario_armarios.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      function parseCSV(text){
+        const lines = text.split(/\r?\n/).filter(Boolean);
+        if(lines.length === 0) return [];
+        const data = [];
+        for(let i=1;i<lines.length;i++){
+          const cols = lines[i].match(/("([^"]|"")*"|[^,]+)/g) || [];
+          const get = idx => (cols[idx]||"").replaceAll(/^"|"$/g,"").replaceAll('""','"').trim();
+          data.push({ nome: get(0), chave: get(1), possui: get(2) });
+        }
+        return data.filter(r => r.nome || r.chave || r.possui);
+      }
+
+      function render(){
+        const tbody = document.querySelector("#tabela tbody");
+        const stats = document.getElementById("stats");
+        tbody.innerHTML = "";
+
+        const all = getData();
+        const q = el("busca").value.toLowerCase();
+        const f = el("filtro").value;
+
+        const filtered = all.filter(r => {
+          const matchText = r.nome.toLowerCase().includes(q) || (r.chave||"").toLowerCase().includes(q);
+          const matchFiltro = f==="todos" ? true : (f==="sim" ? r.possui==="Sim" : r.possui==="Não");
+          return matchText && matchFiltro;
+        });
+
+        const total = all.length;
+        const com = all.filter(r => r.possui==="Sim").length;
+        const sem = all.filter(r => r.possui==="Não").length;
+
+        stats.innerHTML = `
+          <div class="stat"><div class="small">Total</div><b>${total}</b></div>
+          <div class="stat"><div class="small">Com armário</div><b>${com}</b></div>
+          <div class="stat"><div class="small">Sem armário</div><b>${sem}</b></div>
+        `;
+
+        for(const r of filtered){
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${r.nome}</td>
+            <td>${r.chave || "-"}</td>
+            <td><span class="pill ${r.possui==="Sim" ? "ok":"no"}">${r.possui || "-"}</span></td>
+            <td>
+              <button class="secondary" data-edit="${r.id}">Editar</button>
+              <button class="danger" data-del="${r.id}">Excluir</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+      }
+
+      function upsertRecord({id, nome, chave, possui}){
+        const data = getData();
+        if(!id){
+          id = crypto.randomUUID();
+          data.push({id, nome, chave, possui});
+        } else {
+          const i = data.findIndex(x => x.id === id);
+          if(i>=0) data[i] = {id, nome, chave, possui};
+        }
+        setData(data);
+        render();
+      }
+
+      function deleteRecord(id){
+        const data = getData().filter(r => r.id !== id);
+        setData(data);
+        render();
+      }
+
+      // Event handlers
+      document.addEventListener("click", (e) => {
+        if(e.target.matches("[data-del]")){
+          const id = e.target.getAttribute("data-del");
+          if(confirm("Excluir este registro?")) deleteRecord(id);
+        }
+        if(e.target.matches("[data-edit]")){
+          const id = e.target.getAttribute("data-edit");
+          const data = getData().find(r => r.id === id);
+          if(!data) return;
+          el("nome").value = data.nome;
+          el("chave").value = data.chave || "";
+          el("possui").value = data.possui || "";
+          el("btn-salvar").setAttribute("data-editing", id);
+          el("nome").focus();
+        }
+        if(e.target.id === "btn-importar"){
+          el("csv-in").click();
+        }
+      });
+
+      el("csv-in").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const text = await file.text();
+        const rows = parseCSV(text);
+        const data = getData();
+        for(const r of rows){
+          data.push({ id: crypto.randomUUID(), nome: r.nome, chave: r.chave, possui: r.possui });
+        }
+        setData(data);
+        render();
+        e.target.value = "";
+      });
+
+      el("btn-salvar").addEventListener("click", () => {
+        const nome = el("nome").value.trim();
+        const chave = el("chave").value.trim();
+        const possui = el("possui").value;
+
+        if(!nome){ alert("Informe o nome."); el("nome").focus(); return; }
+        if(!possui){ alert("Selecione se possui armário."); el("possui").focus(); return; }
+
+        const editing = el("btn-salvar").getAttribute("data-editing");
+        upsertRecord({ id: editing || null, nome, chave, possui });
+        el("btn-salvar").removeAttribute("data-editing");
+        el("nome").value = ""; el("chave").value = ""; el("possui").value = "";
+      });
+
+      el("btn-limpar").addEventListener("click", () => {
+        el("nome").value = ""; el("chave").value = ""; el("possui").value = "";
+        el("btn-salvar").removeAttribute("data-editing");
+      });
+
+      el("busca").addEventListener("input", render);
+      el("filtro").addEventListener("change", render);
+
+      el("btn-exportar").addEventListener("click", () => {
+        exportCSV(getData());
+      });
+
+      el("btn-zerar").addEventListener("click", () => {
+        if(confirm("Isso apagará todos os registros. Continuar?")){
+          setData([]); render();
+        }
+      });
+
+      // Inicializa com dados do CSV vazio (apenas cabeçalho) se desejar importar manualmente
+      render();
+    </script>
+  </body>
+</html>
