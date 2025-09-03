@@ -1,35 +1,18 @@
-# 📦 Sistema de Marcação de Armários
+# Sistema de Controle de Armários e Chaves
+Este projeto foi ajustado para funcionar **sem Node/Vite**, usando React via CDN e Babel no navegador.
 
-[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)](https://github.com/SEU_USUARIO/SEU_REPOSITORIO)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![CSV](https://img.shields.io/badge/CSV-Suportado-blue)](https://github.com/SEU_USUARIO/SEU_REPOSITORIO)
+## Como usar
+1. Abra o arquivo `index.html` diretamente no navegador (Chrome, Edge, Firefox).
+   - Dê duplo clique no arquivo ou abra com `Ctrl+O` no navegador.
+2. Cadastre funcionários, filtre, edite e exclua.
+3. Os dados ficam salvos no **localStorage** do navegador.
+4. Use **Exportar CSV** para baixar um relatório em `formulario_armarios.csv`.
+5. Use **Importar CSV** para carregar um arquivo no mesmo formato (com cabeçalho):
+   - `Nome do Funcionário, Número da Chave do Armário, Possui Armário (Sim/Não)`
 
+## Estrutura
+- `index.html` — Aplicação completa (UI + lógica) pronta para uso.
+- `formulario_armarios.csv` — Exemplo de planilha (apenas cabeçalho).
 
-## 🎯 Objetivo
-Este site tem como objetivo permitir a **marcação e gerenciamento de armários** para empresas, escolas ou outros ambientes. Ele permite controlar quais pessoas possuem armário e gerenciar as informações associadas a cada armário.
-
-## ⚙️ Funcionalidades
-- Coletar informações de cada pessoa:
-  - Nome completo  
-  - Número da chave  
-  - Possui ou não armário  
-- Gerenciar a lista de armários de forma organizada  
-- **Importar** relatórios em formato CSV  
-- **Exportar** relatórios em formato CSV  
-
-## 🛠 Tecnologias
-- HTML, CSS, JavaScript  
-*(ou frameworks/libraries que estiver usando, se houver)*
-
-## 🚀 Como Usar
-1. Adicione as informações das pessoas no sistema.  
-2. Marque os armários disponíveis e associe às pessoas.  
-3. Gere relatórios ou importe/exporte dados em CSV para facilitar a gestão.  
-
-## 👀 Exemplo Visual
-Aqui você pode colocar uma imagem ou GIF mostrando o sistema funcionando:
-
-![Exemplo](URL_DA_IMAGEM_OU_GIF)
-
-## 📄 Licença
-Este projeto está licenciado sob a licença **MIT** - veja o arquivo [LICENSE](LICENSE) para detalhes.
+## Observação
+A antiga estrutura Vite (src/main.jsx, shadcn/ui, lucide-react) não existia no .zip enviado. Por isso, foi adotado um modelo sem build para garantir execução imediata.
